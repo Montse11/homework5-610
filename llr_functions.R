@@ -21,10 +21,15 @@ llr = function(x, y, z, omega) {
 #' @param omega (numeric) must be a scalar
 #' @return (numeric) scalar
 compute_f_hat = function(z, x, y, omega) {
-  Wz = make_weight_matrix(z, x, omega)
+  Wz = diag(make_weight_matrix(z, x, omega))
   X = make_predictor_matrix(x)
-f_hat = c(1,z) %*% solve(t(X) %*% A) %*% t(X) %*% (Wz*y)
-return(f_hat)
+  n = nrow(X)
+  A = t(sapply(1:n, function(i){
+    Wz[i]*X[i,]
+  }))
+  f_hat = c(1,z) %*% solve(t(X)%*% A) %*% t(X) %*% (Wz*y)
+  #f_hat = c(1, z) %*% solve(t(X) %*% Wz %*% X) %*% t(X) %*% Wz %*% y
+  return(f_hat)
 }
 
 #' @param z (numeric) must be a scalar
