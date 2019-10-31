@@ -1,9 +1,7 @@
-#<<<<<<< HEAD
 # STAT-S 610
 # LAB 4
 # 2019-10-03
 # https://jfukuyama.github.io/teaching/stat610/assignments/lab4.pdf
-setwd("/Users/kmahome/Downloads")
 
 # --- functions --- #
 
@@ -12,9 +10,6 @@ setwd("/Users/kmahome/Downloads")
 #' @param z (numeric) vector, can be of a different length
 #' @param omega (numeric) must be a scalar
 #' @return (numeric) vector of the same length as z
-#=======
-
-#>>>>>>> 40e0877fb308fcdc251c49222cab4f56122d2bc6
 llr = function(x, y, z, omega) {
   fits = sapply(z, compute_f_hat, x, y, omega)
   return(fits)
@@ -33,25 +28,19 @@ compute_f_hat = function(z, x, y, omega) {
     Wz[i]*X[i,]
   }))
   f_hat = c(1,z) %*% solve(t(X)%*% A) %*% t(X) %*% (Wz*y)
-  print(f_hat)
-  
   #f_hat = c(1, z) %*% solve(t(X) %*% Wz %*% X) %*% t(X) %*% Wz %*% y
   return(f_hat)
 }
 
-#<<<<<<< HEAD
 #' @param z (numeric) must be a scalar
 #' @param x (numeric) vector of arbitrary length
 #' @param omega (numeric) must be a scalar
 #' @return (numeric) a diagonal matrix
-#=======
-#>>>>>>> 40e0877fb308fcdc251c49222cab4f56122d2bc6
 make_weight_matrix = function(z, x, omega) {
   r = abs(x - z) / omega  # this is a vector of the same length as x
   w = sapply(r, W)  # this is a vector of the same length as x and r
   Wz = diag(w)  # this is a diagonal matrix with elements from w
   return(Wz)
-#<<<<<<< HEAD
 }
 
 #' @param r (numeric) must be a scalar
@@ -71,12 +60,9 @@ make_predictor_matrix = function(x) {
   return(cbind(rep(1, n), x))
 }
 
-#Krisy's test for commit#
+
 # --- example 1 --- #
 
-TEST=function(x){
-  print("bacon")
-}
 # get the data
 data(french_fries, package = 'reshape2')
 french_fries = na.omit(french_fries)
@@ -92,8 +78,8 @@ z = seq(0, 15, length.out = 100)
 fits = llr(z = z, x = x, y = y, omega = 2)
 
 # plot the data and the smoother
-#plot(x, y)
-#lines(z, fits, col = 'red')
+plot(x, y)
+lines(z, fits, col = 'red')
 
 
 # --- example 2 --- #
@@ -108,41 +94,20 @@ z = seq(-2 * pi, 2 * pi, length.out = 100)
 # run smoothing
 fits = llr(z = z, x = x, y = y, omega = pi / 3)
 
-
-W = function(r) {
-  if (abs(r) < 1) {
-    return((1 - abs(r) ** 3) ** 3)
-  } else {
-    return(0)
-  }
-}
-make_predictor_matrix = function(x){
-  ones = rep(1, times = length(x)) 
-  return(matrix(c(ones,x), nrow = length(x), ncol = 2, byrow = FALSE))
-}
-
-library(reshape2)
-#data(french_fries)
-
-#french_fries = french_fries[complete.cases(french_fries),]
-#z = seq(0, 15, length.out = 100)
-#fits = llr(z = z, x = french_fries$potato, y = french_fries$buttery, omega = 200)
-#plot(french_fries$potato, french_fries$buttery)
-#lines(z, fits, col = 'red')
-#>>>>>>> 40e0877fb308fcdc251c49222cab4f56122d2bc6
-
 # plot the data and the smoother
-#plot(x, y)
-#lines(z, fits, col = 'red')
+plot(x, y)
+lines(z, fits, col = 'red')
 
-Wz = Wz
-X = make_predictor_matrix(x)
-XT=sweep(sweep(X,2))
-n = nrow(X)
-sweep(W,2,X)
-
-#f_hat=matrix sweepo
-
+f_hat = c(1,z) %*% solve(t(X)%*% WzX) %*% t(X) %*% (Wz*y)
 fhat_means=t(apply(f_hat,2,mean))
 fhat_sds=t(apply(f_hat,2,sd))
 fhat_T=sweep(sweep(f_hat,2,fhat_means,"-"),2,fhat_sds,"/")*10+50
+
+### Use as example to compare apply vs sweep
+my.matrix <- matrix(seq(1,9,1), nrow=3)
+row.sums <- rowSums(my.matrix)
+apply.matrix <- apply(X = my.matrix, MARGIN = 2, FUN = function (x) x/row.sums)
+sweep.matrix <- sweep(x = my.matrix, MARGIN = 1, STATS = rowSums(my.matrix), FUN="/")
+apply.matrix - sweep.matrix ## should be same matrix
+
+###Attempt 2 at sweep function compare to Montse apply function above
