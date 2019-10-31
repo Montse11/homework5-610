@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # STAT-S 610
 # LAB 4
 # 2019-10-03
@@ -10,6 +11,10 @@
 #' @param z (numeric) vector, can be of a different length
 #' @param omega (numeric) must be a scalar
 #' @return (numeric) vector of the same length as z
+=======
+setwd("/Users/azakeres/Downloads/homework5-610")
+
+>>>>>>> 40e0877fb308fcdc251c49222cab4f56122d2bc6
 llr = function(x, y, z, omega) {
   fits = sapply(z, compute_f_hat, x, y, omega)
   return(fits)
@@ -27,15 +32,19 @@ compute_f_hat = function(z, x, y, omega) {
   return(f_hat)
 }
 
+<<<<<<< HEAD
 #' @param z (numeric) must be a scalar
 #' @param x (numeric) vector of arbitrary length
 #' @param omega (numeric) must be a scalar
 #' @return (numeric) a diagonal matrix
+=======
+>>>>>>> 40e0877fb308fcdc251c49222cab4f56122d2bc6
 make_weight_matrix = function(z, x, omega) {
   r = abs(x - z) / omega  # this is a vector of the same length as x
   w = sapply(r, W)  # this is a vector of the same length as x and r
   Wz = diag(w)  # this is a diagonal matrix with elements from w
   return(Wz)
+<<<<<<< HEAD
 }
 
 #' @param r (numeric) must be a scalar
@@ -91,6 +100,30 @@ z = seq(-2 * pi, 2 * pi, length.out = 100)
 
 # run smoothing
 fits = llr(z = z, x = x, y = y, omega = pi / 3)
+=======
+}
+
+W = function(r) {
+  if (abs(r) < 1) {
+    return((1 - abs(r) ** 3) ** 3)
+  } else {
+    return(0)
+  }
+}
+make_predictor_matrix = function(x){
+  ones = rep(1, times = length(x)) 
+  return(matrix(c(ones,x), nrow = length(x), ncol = 2, byrow = FALSE))
+}
+
+library(reshape2)
+data(french_fries)
+
+french_fries = french_fries[complete.cases(french_fries),]
+z = seq(0, 15, length.out = 100)
+fits = llr(z = z, x = french_fries$potato, y = french_fries$buttery, omega = 200)
+plot(french_fries$potato, french_fries$buttery)
+lines(z, fits, col = 'red')
+>>>>>>> 40e0877fb308fcdc251c49222cab4f56122d2bc6
 
 # plot the data and the smoother
 plot(x, y)
