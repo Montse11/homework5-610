@@ -97,3 +97,17 @@ fits = llr(z = z, x = x, y = y, omega = pi / 3)
 # plot the data and the smoother
 plot(x, y)
 lines(z, fits, col = 'red')
+
+f_hat = c(1,z) %*% solve(t(X)%*% WzX) %*% t(X) %*% (Wz*y)
+fhat_means=t(apply(f_hat,2,mean))
+fhat_sds=t(apply(f_hat,2,sd))
+fhat_T=sweep(sweep(f_hat,2,fhat_means,"-"),2,fhat_sds,"/")*10+50
+
+### Use as example to compare apply vs sweep
+my.matrix <- matrix(seq(1,9,1), nrow=3)
+row.sums <- rowSums(my.matrix)
+apply.matrix <- apply(X = my.matrix, MARGIN = 2, FUN = function (x) x/row.sums)
+sweep.matrix <- sweep(x = my.matrix, MARGIN = 1, STATS = rowSums(my.matrix), FUN="/")
+apply.matrix - sweep.matrix ## should be same matrix
+
+###Attempt 2 at sweep function compare to Montse apply function above
