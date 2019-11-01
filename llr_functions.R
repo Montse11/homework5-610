@@ -26,7 +26,6 @@ compute_f_hat = function(z, x, y, omega) {
   n = nrow(X)
   A = sweep(X, 1, Wz, "*") 
   f_hat = c(1,z) %*% solve(t(X)%*% A) %*% t(X) %*% (Wz*y)
-  #f_hat = c(1, z) %*% solve(t(X) %*% Wz %*% X) %*% t(X) %*% Wz %*% y
   return(f_hat)
 }
 
