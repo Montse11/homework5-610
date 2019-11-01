@@ -28,7 +28,6 @@ compute_f_hat = function(z, x, y, omega) {
     Wz[i]*X[i,]
   }))
   f_hat = c(1,z) %*% solve(t(X)%*% A) %*% t(X) %*% (Wz*y)
-  #f_hat = c(1, z) %*% solve(t(X) %*% Wz %*% X) %*% t(X) %*% Wz %*% y
   return(f_hat)
 }
 
